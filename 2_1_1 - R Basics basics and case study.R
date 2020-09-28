@@ -5,9 +5,13 @@
 
 # Load packages ----
 # Install once, but initialize each time you start a new session
+# We'll come back to this packages soon later on. I put this 
+# command here since it's good practice to list all your used 
+# packages at the beginning of a script
 library(tidyverse)
 
 # Basic R syntax ----
+# What does this command do?
 n <- log2(8)
 
 # Exercise 1 ----
@@ -16,60 +20,66 @@ n <- log2(8)
 # Exercise 2 ----
 # Incomplete commands :/
 # What happens if you execute this command?
-n <- log2(8)
+# n <- log2(8
 
 # Plant Growth Case Study ----
 
 # A built-in data set ----
-PlantGrowth #already available
-data(PlantGrowth)
+PlantGrowth # already available in base R
+data(PlantGrowth) # This will make it appear in your environment
+
+# We're going to do something quite modern in R, which is to use a 
+# tibble instead of a data.frame. That doesn't mean anything to you 
+# now, but we'll get to it soon.
+# First, make sure you have the tidyverse package installed and
+# that you have executed the library(tidyverse) command
+# above, after installing, so that you have initialized the package.
+PlantGrowth <- as_tibble(PlantGrowth) # convert this to a "tibble" (more on this later)
 
 # 1. Descriptive Statistics ----
-# The "global mean", e.g. ANOVA Null hypothesis
-mean(PlantGrowth$weight)
+# The "global mean" of all the weight values
 
-mean(PlantGrowth$group) # Error, not numeric (int or dbl) or logical (TRUE/FALSE, 1/0)
 
-# group-wise stats
+# Would this on the group column?
+
+
+# Group-wise statistics
 # Here, using functions from dplyr, a part of the Tidyverse
-# Thus, using Tidyverse notation
+# Using Tidyverse notation:
 # %>% is the "the pipe operator"
 # Pronounce it as "... and then ..."
 # Type it using shift + ctrl + m
 
-# summarise for aggregration functions
-PlantGrowth %>% 
-  group_by(group) %>% 
-  summarise(avg = mean(weight),
-            sum = sum(weight)) 
+# Use summarise() for aggregation functions
 
-# Atypcial, but can still be useful:
-PlantGrowth %>% 
-  group_by(group) %>% 
-  mutate(avg = mean(weight)) 
 
-# for transformation functions: e.g. z-score within each group
+
+
+
+# Or... an atypical example, but it can still be useful:
+
+
+
+
+# For transformation functions: e.g. z-score within each group
 # (x_i - x_bar)/x_sd
 # function: scale()
 # typical use mutate()
-PlantGrowth %>% 
-  group_by(group) %>% 
-  mutate(z_score = scale(weight))
-
-# or
-PlantGrowth %>% 
-  group_by(group) %>% 
-  summarise(z_score = scale(weight))
 
 
-# What if we didn't use mutate - this doesn't work: 
-group_by(PlantGrowth, group) %>% 
-  scale(weight)
 
-scale(PlantGrowth$weight)
+# or...
 
 
-# Typcial base pkg syntax
+
+
+
+
+# Let's review the two most common syntax paradigms in R
+# (This is kind of like different dialects of the same language,
+#  some things are the same or very similar but there are key
+#  differences that make them distinct systems.)
+# Typical base pkg syntax
 mean(PlantGrowth$weight)
 
 # Tidyverse syntax
@@ -88,58 +98,27 @@ PlantGrowth$weight %>%
 # 3 - Geometry - how the plot will look
 
 # box plot
-ggplot(PlantGrowth, aes(group, weight)) +
-  geom_boxplot()
 
 # "dot plot" (mean +/- 1SD)
-ggplot(PlantGrowth, aes(group, weight)) +
-  geom_jitter(width = 0.2, color = "steelblue") +
-  stat_summary(fun.data = mean_sdl, 
-               fun.args = list(mult = 1),
-               color = "red")
 
-# Q-Q plot (useful, but a bit more advanced):
-ggplot(PlantGrowth, aes(sample = weight)) +
-  geom_qq() +
-  geom_qq_line(color = "red") +
-  facet_wrap(~ group, scales = "free_y")
+
+
 
 # 3. Inferential Statistics ----
 # first step: define a linear model
 # ~ means "described by"
-plant_lm <- lm(weight ~ group, data = PlantGrowth)
 
 
-# t-tests
-# Typically, use t.test(), but here, we can use:
-summary(plant_lm)
+
+
 
 # 1-way ANOVA
-summary(plant_lm)
-anova(plant_lm)
 
-# For only ctrl-trt1
-# 0.250
-t.test(x = PlantGrowth$weight[PlantGrowth$group == "ctrl"],
-       y = PlantGrowth$weight[PlantGrowth$group == "trt1"],
-       var.equal = FALSE)
 
-# 0.249
-t.test(x = PlantGrowth$weight[PlantGrowth$group == "ctrl"],
-       y = PlantGrowth$weight[PlantGrowth$group == "trt1"],
-       var.equal = TRUE)
 
-# For all pair-wise comparisons use 
-Plant_aov <- aov(weight ~ group, data = PlantGrowth)
-summary(Plant_aov)
-TukeyHSD(Plant_aov)
 
-# What about when there are only two groups:
-sleep
 
-# classic t-test
-t.test(extra ~ group, data = sleep)
+# For all pair-wise comparisons use:
 
-# compare to lm method:
-sleep_lm <- lm(extra ~ group, data = sleep)
-summary(sleep_lm)
+
+

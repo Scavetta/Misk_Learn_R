@@ -5,13 +5,14 @@
 # Everything that happens, is because of a function
 
 # Arithmetic operators ----
-# e.g.
-34 + 6
+# e.g. type a math equation
+
 
 # BEDMAS - order of operations
 # brackets, expon, div, mult, add, sub
-2 - 3/4 # 1.25
-(2 - 3)/4 # -0.25
+# How are these different?
+2 - 3/4
+(2 - 3)/4
 
 # Use objects in place of numbers
 n <- 34
@@ -24,45 +25,51 @@ n + p
 
 # 2 - Call args by name or position
 
-# i.e.
-log(x = 8, base = 2) # long form, naming
-log(8, 2) # long form, positional matching
-log(8, base = 2) # common: mix naming and position
-log2(8) # short form, positional matching
-log(base = 2, 8) # works, but confusing!
+# i.e. Can you tell the difference in these function calls?
+# Which ones work and which one will produce an error?
+log(x = 8, base = 2)
+log(8, 2)
+log(8, base = 2)
+log2(8)
+log(base = 2, 8)
 
 # 3 - Funs can have 0 to many un-named args
-ls()
+# Can you think of an example?
 
 # 4 - Args can be named or un-named
 
-# e.g. combine
-xx <- c(3, 8, 9, 23)
-xx
+# c() for combine ----
+# With numbers:
 
-myNames <- c("healthy", "tissue", "quantity")
-myNames
 
+# With characters:
+
+
+
+# As an aside: recall, everything is a function...
 # How is + a function?
 p + n
 # this is actually...
 `+`(p, n)
 
-# A regular sequence of numbers
+# seq() for a regular sequence of numbers ----
 seq(from = 1, to = 100, by = 7)
-# typically:
-foo1 <- seq(1, 100, 7)
+# Can you write this in a shorter form?
+# Assign the output to foo1
+
 foo1
 
-# use objects in functions:
-foo2 <- seq(1, n, p)
-foo2
+# We can use objects in functions:
 
+
+
+# The colon operator ----
 # regular sequence of 1 interval
 seq(1, 10, 1)
 # Use the colon operator instead:
 1:10
 
+# Applying math functions ----
 # Two major types of math functions:
 # Aggregration functions
 # 1 output value (typically)
@@ -75,21 +82,23 @@ seq(1, 10, 1)
 # +, -, /, ...
 
 # Exercise: Are these transformation or aggregation?
+# DON't execute the commands, try to guess what the output will be!
 foo2 + 100 # 
 foo2 + foo2 # 
 sum(foo2) + foo2 # 
 1:3 + foo2 # 
 
-# FUNDAMENTAL CONCEPT: VECTOR RECYCLING
-
+# FUNDAMENTAL CONCEPT: VECTOR RECYCLING ----
 1:4 + foo2
 
-# 3 types of messages:
+# Now we're starting to see different kinds of feedback from R
+# There are 3 types of messages:
 # Information: Neutral
 # Warning: Possible problem
 # Error: Full stop
 
-# Exercise: Calculate y = 1.12x − 0.4 for xx
+# Exercise:
+# Calculate y = 1.12x − 0.4 for xx
 
 # Part 2: Objects (nouns) ----
 # Anything that exists is an object
@@ -100,18 +109,19 @@ foo1
 myNames
 
 # "user-defined atomic vector types" ----
-# The 4 most common ones: 
+# What do you the 4 most common ones are used to represent? 
 # Logical - TRUE/FALSE, T/F, 1/0 (Boolean)
 # Integer - whole numbers
 # Double - real numbers (float)
 # Character - All values (string)
 
-# Numeric - Generic reference to int or dbl
+# Numeric - Generic class refer to int or dbl
 
 # check
 typeof(foo1)
 typeof(myNames)
 
+# Let's make some more vectors for later on:
 foo3 <- c("Liver", "Brain", "Testes", "Muscle",
           "Intestine", "Heart")
 typeof(foo3)
@@ -119,7 +129,7 @@ typeof(foo3)
 foo4 <- c(TRUE, FALSE, FALSE, TRUE, TRUE, FALSE)
 typeof(foo4)
 
-# Homogenous types:
+# Homogeneous types:
 test <- c(1:10, "bob")
 test
 typeof(test)
@@ -134,10 +144,12 @@ mean(test)
 test <- as.numeric(test)
 test
 
-# Now we can do math: but deal with the NA
+# Now we can do math: 
+mean(test)
+# but we need to deal with the NA
 mean(test, na.rm = TRUE)
 
-# Lists - 1-dimensional, heterogenous ----
+# Lists - 1-dimensional, heterogeneous ----
 typeof(plant_lm)
 
 # how many elements:
@@ -154,10 +166,10 @@ names(plant_lm)
 # Anything that's named can be called with $
 plant_lm$coefficients # a 3-element named dbl (numeric) vector
 plant_lm$residuals # a 30-element dbl vector
-plant_lm$model # dataframe
+plant_lm$model # data.frame
 
-# Add comment as metadata:
-comment(plant_lm) <- "I love R so much!"
+# As an aside: You can even add comments:
+comment(plant_lm) <- "I love R!"
 attributes(plant_lm)
 
 # Add comment as an actual list item:
@@ -183,25 +195,36 @@ typeof(PlantGrowth)
 # Rows = observations
 # Columns = variables
 
-# Make a data frame from scratch:
-foo_df <- data.frame(foo4, foo3, foo2)
+# Make a data frame from scratch using data.frame(), or...
+# You can use the modern variant  
+# Note, I put _df on the end of the name to remind us that this is a
+# data frame (well, a tibble), but it's not necessary.
+foo_df <- tibble(foo4, foo3, foo2)
 foo_df
 
-# update metadata (names)
+# To modify the column names, what you're actually doing is
+# Change an attribute (think metadata). The most common attributes
+# can be accessed with accessor functions, in this case names()
 names(foo_df) <- myNames
 foo_df
 
-# Call each variable by name:
-foo_df$quantity # as a vector
+# How can you call each variable (i.e. column) by name:
+# Note it will return a vector
+
 
 # Basic functions:
-str(foo_df) # structure
-glimpse(foo_df)
-summary(foo_df)
+# Display the structure of foo_df using a base R function:
 
-# also...
-dim(foo_df)
-nrow(foo_df)
-ncol(foo_df)
+# Now using a tidyverse function:
 
 
+# Can you get a short summary of every variable with one command?
+
+
+# Can you print out the number of rows & columns?
+
+
+# How about just the number of rows?
+
+
+# How about just the number of columns? 
